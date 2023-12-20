@@ -34,14 +34,18 @@ class Stack {
   }
 
   push(element) {
-    this.size += 1;
     this.storage[this.size] = element;
+
+    this.size += 1;
   }
 
   pop() {
     let removedElement = this.storage[this.size];
+
     delete this.storage[this.size];
+
     this.size -= 1;
+    
     return removedElement;
   }
 
