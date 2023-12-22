@@ -7,57 +7,43 @@ const { Node } = require('../extensions/list-tree.js');
 */
 
 class BinarySearchTree {
-  constructor(data) {
-    this.root = new Node(data);
+  constructor() {
+    this.root = null;
     this.count = 1;
   }
 
   getRoot() {
-    let currentNode = this.root;
-    
-    if (currentNode.data) {
-      return currentNode.data;
-    }
-
-    return null;
+    return this.root;
   }
 
   add(data) {
     this.count += 1;
 
-    let newNode = new Node(data);
+    this.root = addNode(this.root, data);
 
-    const searchTree = node => {
+    function addNode(currentNode, data) {
+      // if no node (place is empty)
+      if (!currentNode) {
+        return new Node(data);
+      }
+
+      // if such node exist
+      if (currentNode.data === data) {
+        return currentNode;
+      }
+
       // if data < node.data -> go left
-      if (data < node.data) {
-
-        // if no left child -> add new node
-        if (!node.left) {
-          node.left = newNode;
-        }
-
-        // if left child exist -> look left again
-        else {
-          searchTree(node.left);
-        }
+      if (data < currentNode.data) {
+        currentNode.left = addNode(currentNode.left, data);
       }
 
       // if data > node.data -> go right
-      else if (data > node.data) {
-
-        // if no right child -> add new node
-        if (!node.right) {
-          node.right = newNode;
-        }
-
-        // if right child exist -> look right again
-        else {
-          searchTree(node.right);
-        }
+      else {
+        currentNode.right = addNode(currentNode.right, data);
       }
-    }
 
-    searchTree(this.root);
+      return currentNode;
+    }
   }
 
   has(data) {
@@ -79,21 +65,29 @@ class BinarySearchTree {
   }
 
   find(data) {
-    let currentNode = this.root;
-
-    while(currentNode) {
-      if (data === currentNode.data) {
-        return currentNode.data;
+    function getNode(currentNode, data) {
+      // if no node
+      if (!currentNode) {
+        return null;
       }
-  
+
+      // if such node exist
+      if (currentNode.data === data) {
+        return currentNode;
+      }
+
+      // if data < currentNode.data -> go left
       if (data < currentNode.data) {
-        currentNode = currentNode.left;
-      } else {
-        currentNode = currentNode.right;
+        return getNode(currentNode.left, data);
+      }
+
+      // if data > currentNode.data -> go right
+      else {
+        return getNode(currentNode.right, data);
       }
     }
 
-    return null;
+    return getNode(this.root, data);
   }
 
   remove(data) {
